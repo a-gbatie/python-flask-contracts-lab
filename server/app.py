@@ -14,5 +14,12 @@ def get_contract(id):
   
   return "Contract not found", 404
 
+@app.route('/customer/<customer_name>')
+def get_customer(customer_name):
+  if customer_name in customers:
+    return "", 204
+  
+  return "Customer not found", 404
+
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
