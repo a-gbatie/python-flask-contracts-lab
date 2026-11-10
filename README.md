@@ -1,149 +1,159 @@
-# Lab: Contractors Lab
+# Flask Routes: Managing Contracts
 
----
+## Description
 
-## Overview
+This project is a Flask web application. The application demonstrates how Flask handles HTTP requests and responses using dynamic routes and HTTP status codes.
 
-Now it is time for you to build your own request responses!
+Users can retrieve contract information by ID or check whether a customer exists.
 
-You are working for a company that manages contracts between two parties. You need to manage sensitive data, and as such, you need to build two requests:
+## Technologies Used
 
-- One for **customer information**
-- One for **contract information**
+- Python 3.10
+- Flask
+- Pipenv
+- Pytest
 
-You will be using two new response codes:
+## Installation
 
-- **204**: Successful response but no data to send (e.g., confirming a customer exists without sharing data).
-- **404**: Not found — we cannot find the requested data.
+1. Clone the repository:
 
----
+   ```bash
+   git clone git@github.com:a-gbatie/python-flask-contracts-lab.git
+   ```
 
-## Tasks
+2. Navigate into the project directory:
 
-### Task 1: Define the Problem
+   ```bash
+   cd python-flask-contracts-lab
+   ```
 
-Build the following routes:
+3. Install the dependencies using Python 3.10:
 
-- `/contract/<id>`
-- `/customer/<customer_name>`
+   ```bash
+   pipenv install --python 3.10
+   ```
 
----
+## Running the Application
 
-### Task 2: Determine the Design
+Start the Flask server:
 
-#### App Routes:
+```bash
+pipenv run python server/app.py
+```
 
-- `GET /contract/<id>`
-  - **200**: Contract found — return contract information.
-  - **404**: Contract not found.
+The application runs at:
 
-- `GET /customer/<customer_name>`
-  - **204**: Customer found — no information returned (sensitive).
-  - **404**: Customer not found.
+http://127.0.0.1:5555/
 
----
+## API Routes
 
-### Task 3: Develop the Code
+### GET `/contract/<id>`
 
-- Initialize Flask
-- Set up routes
-- Configure responses
+Retrieves contract information using a contract ID.
 
----
+If the contract exists, the application returns its information with HTTP status `200 OK`.
 
-### Task 4: Test and Refine
+**Example Request:**
 
-- Debug and test during development using the provided test suite and Flask instance.
+```text
+GET http://127.0.0.1:5555/contract/1
+```
 
----
+**Response:**
 
-### Task 5: Document and Maintain
+```text
+This contract is for John and building a shed
+```
 
-- Commit as you go with meaningful messages.
-- Push commit history to GitHub periodically and when the lab is complete.
+**Status:** `200 OK`
 
----
+If the contract does not exist:
 
-## Tools and Resources
+```text
+GET http://127.0.0.1:5555/contract/99
+```
 
-- **GitHub Repo**: *Link to be provided*
-- **Flask Quickstart**: [https://flask.palletsprojects.com/en/stable/quickstart/](https://flask.palletsprojects.com/en/stable/quickstart/)
+**Response:**
 
----
+```text
+Contract not found
+```
 
-## Instructions
+**Status:** `404 Not Found`
 
-### Set Up
+### GET `/customer/<customer_name>`
 
-Before coding:
+Checks whether a customer exists in the customer list.
 
-1. **Fork and Clone**
-   - Go to the provided GitHub repository link.
-   - Fork the repository to your GitHub account.
-   - Clone the forked repository to your local machine.
+If the customer exists, the application returns HTTP status `204 No Content`.
 
-2. **Open and Run**
-   - Open the project in VSCode.
-   - Run `pipenv install` to install dependencies.
-   - Run `pipenv shell` to activate the Python shell.
+**Example Request:**
 
----
+```text
+GET http://127.0.0.1:5555/customer/bob
+```
 
-### Task 1: Define the Problem
+**Response:** No content
 
-Build the following routes:
+**Status:** `204 No Content`
 
-- `/contract/<id>`
-- `/customer/<customer_name>`
+If the customer does not exist:
 
----
+```text
+GET http://127.0.0.1:5555/customer/alice
+```
 
-### Task 2: Determine the Design
+**Response:**
 
-#### App Routes:
+```text
+Customer not found
+```
 
-- `/contract/<id>`
-  - **200**: Contract found — return information
-  - **404**: Contract not found
+**Status:** `404 Not Found`
 
-- `/customer/<customer_name>`
-  - **204**: Customer found — return no information
-  - **404**: Customer not found
+## HTTP Status Codes
 
----
+This project demonstrates three HTTP status codes:
 
-### Task 3: Develop, Test, and Refine the Code
+| Status Code | Meaning | Usage |
+|-------------|---------|-------|
+| 200 | OK | Contract was found |
+| 204 | No Content | Customer exists, but no data is returned |
+| 404 | Not Found | Contract or customer does not exist |
 
-1. Create a **feature branch**.
-2. Build the following routes:
+## How It Works
 
-#### `/contract/<id>`
+The application uses Flask's `@app.route()` decorator to connect URLs to Python functions.
 
-- If the contract ID is found in the given array:
-  - Return contract information with a **200** response.
-- If not found:
-  - Return a **404** response.
+### Contract Route
 
-#### `/customer/<customer_name>`
+The contract route uses a dynamic integer parameter to identify a contract.
 
-- If the customer name is found:
-  - Return a **204** response with an empty body.
-- If not found:
-  - Return a **404** response.
+A `for` loop searches through the `contracts` list and checks whether the requested ID matches an existing contract.
 
-3. Push the feature branch and open a PR on GitHub.
-4. Merge into `main`.
+If a match is found, the contract information is returned with status `200`.
 
----
+Otherwise, the application returns status `404`.
 
-### Task 4: Document and Maintain
+### Customer Route
 
-#### Best Practices:
+The customer route captures a customer's name from the URL.
 
-- Add comments to explain logic and purpose.
-- Clarify code intent for other developers.
-- Include a screenshot of completed work in the README.
-- Update the README to reflect functionality using [https://makeareadme.com](https://makeareadme.com).
-- Delete stale branches on GitHub.
-- Remove unnecessary or commented-out code.
-- Update `.gitignore` if needed to exclude sensitive data
+An `if` statement checks whether the name exists in the `customers` list.
+
+If the customer exists, the application returns status `204` with an empty response body.
+
+Otherwise, it returns status `404`.
+
+## Testing
+
+Run the automated tests:
+
+```bash
+pipenv run pytest
+```
+
+The tests check whether the routes return the expected responses and HTTP status codes.
+
+## Screenshot of Completed Tests
+![alt text](image.png)
